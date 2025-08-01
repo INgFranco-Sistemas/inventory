@@ -1,0 +1,298 @@
+NVM Instalación
+https://www.youtube.com/watch?app=desktop&v=iG4u1MK7N3I
+
+https://demos.pixinvent.com/materialize-vuejs-admin-template/documentation/guide/installation.html
+https://demos.pixinvent.com/materialize-vuejs-admin-template/demo-1/dashboards/crm
+
+https://spatie.be/docs/laravel-permission/v6/installation-laravel
+https://docs.laravel-excel.com/3.1/getting-started/installation.html
+--------------------------------------------------------
+https://github.com/barryvdh/laravel-dompdf
+
+use Barryvdh\DomPDF\Facade use PDF;
+use Barryvdh\DomPDF\Facade\PDF;
+------------------
+function parseJwt(token) {
+  try {
+   // Aquí separamos la segunda parte (el payload) que contiene los datos como la fecha de expiración
+    const base64Url = token.split('.')[1]; // Obtenemos el payload que está en formato base64Url
+    
+    // El formato base64Url usa '-' y '_' en lugar de '+' y '/' respectivamente
+    // Necesitamos reemplazarlos para que sea decodificable en base64
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    
+    // Decodificamos la cadena base64
+    // atob() convierte la cadena base64 a texto legible
+    // Luego usamos decodeURIComponent para manejar correctamente los caracteres especiales
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2); // Convertimos a formato URI
+    }).join(''));
+    
+    // Finalmente convertimos el payload decodificado a un objeto JSON y lo retornamos
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+---------------------------
+function isTokenExpired(token) {
+  const decodedToken = parseJwt(token);
+  if (!decodedToken || !decodedToken.exp) {
+    return true; // Token inválido o sin fecha de expiración
+  }
+  const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
+  return decodedToken.exp < currentTime; // Retorna true si el token ha expirado
+}
+------------------------------
+
+loadFile($event:any){
+    if($event.target.files[0].type.indexOf("image") < 0){
+      this.validation = "SOLAMENTE PUEDEN SER ARCHIVOS DE TIPO IMAGEN";
+      return;
+    }
+    this.validation = '';
+    this.FILE_AVATAR = $event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(this.FILE_AVATAR);
+    reader.onloadend = () => this.IMAGEN_PREVIZUALIZA = reader.result;
+}
+
+____________________
+
+public function setCreatedAtAttribute($value)
+    {
+    	date_default_timezone_set('America/Lima');
+        $this->attributes["created_at"]= Carbon::now();
+    }
+
+    public function setUpdatedAtAttribute($value)
+    {
+    	date_default_timezone_set("America/Lima");
+        $this->attributes["updated_at"]= Carbon::now();
+    }
+______________________________
+import { Spanish } from "flatpickr/dist/l10n/es";
+if(!compAttrs.config){
+  compAttrs.config = {locale: Spanish};
+}
+_______________________________
+
+                        <label for="">Fecha de nacimiento</label>
+                        <div class="app-picker-field">
+                            <div class="v-input v-input--horizontal v-input--center-affix v-input--density-comfortable v-locale--is-ltr position-relative v-text-field">
+                                <div class="v-input__control">
+                                    <div class="v-field v-field--center-affix v-field--variant-outlined v-theme--light v-locale--is-ltr">
+                                        <div class="v-field__field">
+                                            <div class="v-field__input">
+                                                <input type="date" class="flat-picker-custom-style flatpickr-input" v-model="form.dirth_date" style="opacity: 1;"  id="">
+                                            </div>
+                                        </div>
+                                        <div class="v-field__outline text-primary"><div class="v-field__outline__start"></div><div class="v-field__outline__notch"><label class="v-label v-field-			label v-field-label--floating" aria-hidden="true" for="input-8" style="">Nombre</label></div><div class="v-field__outline__end"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+_______________________________
+
+date_default_timezone_set('America/Lima');
+Carbon::setLocale('es');
+_____________________
+                        :config="{ minDate: 'today',disable: [
+                            (date) => {
+                                // Deshabilita sábados (6) y domingos (0)
+                                return date.getDay() === 0 || date.getDay() === 6;
+                            },
+                        ]}"
+________________________________
+
+$record->created_at->diffForHumans();
+________________________________
+
+composer require aws/aws-sdk-php
+
+_________________________________
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::bucket-images-2025/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::bucket-images-2025/*"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::bucket-images-2025"
+        },
+        {
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:DeleteObject",
+            "Resource": "arn:aws:s3:::bucket-images-2025/*"
+        }
+    ]
+}
+__________________________________
+
+Compress-Archive -Path index.mjs, node_modules, package.json -DestinationPath function.zip
+___________________________________
+composer require league/flysystem-aws-s3-v3
+__________________________________
+https://docs.aws.amazon.com/sns/latest/dg/sns-sms-sandbox-moving-to-production.html
+______________
+public function getProductImagenAttribute()
+    {
+        $link = null;
+        if($this->imagen){
+            if(str_contains($this->imagen,"https://") || str_contains($this->imagen,"http://")){
+                $link = $this->imagen;
+            }else{
+                $link =  env('APP_URL').'storage/'.$this->imagen;
+            }
+        }
+        return $link;
+    }
+_______________
+
+<VBtn
+                                color="info"
+                                class="mx-1"
+                                prepend-icon="ri-search-2-line"
+                                @click="list()"
+                            >
+                            </VBtn>
+                            <VBtn
+                                color="secondary"
+                                class="mx-1"
+                                prepend-icon="ri-restart-line"
+                                @click="reset()"
+                            >
+                            </VBtn>
+______________________
+
+<VBtn
+                                color="success"
+                                class="mx-1"
+                                prepend-icon="ri-file-excel-2-line"
+                                @click="downloadExcel()"
+                            >
+                            </VBtn>
+________________
+<VBtn
+                                color="success"
+                                class="mx-1"
+                                prepend-icon="ri-file-excel-line"
+                                @click="ImportExcel()"
+                            >
+                            </VBtn>
+
+________________________
+
+SELECT setval('sales_id_seq', 999);
+CREATE SEQUENCE sales_id_seq START 1000;
+________________
+$params = array(
+            "credentials" => array(
+                'key' => env("AWS_ACCESS_KEY_ID"),
+                'secret' => env("AWS_SECRET_ACCESS_KEY"),
+            ),
+            'region' => env("AWS_DEFAULT_REGION"),
+            'version' => 'latest'
+        );
+
+        $sns = new SnsClient($params);
+
+$args = array(
+            'MessageAttributes' => [
+                'AWS.SNS.SMS.SenderID' => [
+                    'DataType' => 'String',
+                    'StringValue' => 'Laravest'
+                ],
+                // 'AWS.SNS.SMS.MaxPrice' => [
+                //     'DataType' => 'Number',
+                //     'StringValue' => '0.50'
+                // ],
+                'AWS.SNS.SMS.SMSType' => [
+                    'DataType' => 'String',
+                    'StringValue' => 'Transactional'
+                ],
+            ],
+            "Message" => "HOLA DEV MENSAJE DE PRUEBA: 2234324",
+            "PhoneNumber" => env("AWS_PHONE"),
+        );
+
+        $result = $sns->publish($args);
+
+________________________________________
+
+CAST(SUM(appointment_payments.amount) AS DOUBLE PRECISION)
+______________
+
+const month_list = ref([
+        {
+            id: '01',
+            name: 'Enero',
+        },
+        {
+            id: '02',
+            name: 'Febrero',
+        },
+        {
+            id: '03',
+            name: 'Marzo'
+        },
+        {
+            id: '04',
+            name: 'Abril',
+        },
+        {
+            id: '05',
+            name: 'Mayo',
+        },
+        {
+            id: '06',
+            name: 'Junio'
+        },
+        {
+            id: '07',
+            name: 'Julio',
+        },
+        {
+            id: '08',
+            name: 'Agosto',
+        },
+        {
+            id: '09',
+            name: 'Septiembre'
+        },
+        {
+            id: '10',
+            name: 'Octubre',
+        },
+        {
+            id: '11',
+            name: 'Noviembre',
+        },
+        {
+            id: '12',
+            name: 'Diciembre'
+        }
+    ]);
+
+const year_list = ref(['2023','2024','2025','2026','2027','2028']);
+
+const month_selected = ref(((new Date().getMonth() + 1) <= 9 ? "0"+(new Date().getMonth() + 1) : (new Date().getMonth() + 1) + ''));
+
+https://cdn-icons-png.flaticon.com/512/8644/8644515.png
+
+
