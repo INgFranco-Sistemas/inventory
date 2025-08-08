@@ -28,8 +28,8 @@ const router = createRouter({
     name: 'index',
     redirect: to => {
       // TODO: Get type from backend
-      const userData = useCookie('userData')
-      if (userData?.value)
+      const userData = localStorage.getItem("user"); //useCookie('userData')
+      if (userData)
         return { name: 'dashboard' }
       
       return { name: 'login', query: to.query }

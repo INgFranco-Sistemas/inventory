@@ -18,6 +18,8 @@ const form = ref({
 
 const error_exists = ref(null);
 const success_exists = ref(null);
+const route = useRoute()
+const router = useRouter()
 
 const login = async () => {
   try {
@@ -40,6 +42,9 @@ const login = async () => {
     localStorage.setItem("token", resp.access_token);
     localStorage.setItem("user", JSON.stringify(resp.user));
     success_exists.value = 1;
+    await nextTick(() => {
+      router.replace(route.query.to ? String(route.query.to) : '/')
+    })
   } catch (error) {
     console.log(error)
   }
