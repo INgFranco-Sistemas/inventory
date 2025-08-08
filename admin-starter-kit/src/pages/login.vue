@@ -16,6 +16,35 @@ const form = ref({
   remember: false,
 })
 
+const error_exists = ref(null);
+const success_exists = ref(null);
+
+const login = async () => {
+  try {
+    error_exists.value = null;
+    success_exists.value = null;
+
+    const resp = await $api('auth/login', {
+      method: 'POST',
+      body: {
+        email: form.value.email,
+        password: form.value.password,
+      },
+      onResponseError({ response }) {
+        console.log(response);
+        error_exists.value = response._data.error;
+      }
+    });
+
+    console.log(resp);
+    localStorage.setItem("token", resp.access_token);
+    localStorage.setItem("user", JSON.stringify(resp.user));
+    success_exists.value = 1;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 definePage({ meta: { layout: 'blank', unauthenticatedOnly: true, } })
 
 const isPasswordVisible = ref(false)
@@ -54,7 +83,7 @@ const authV2LoginIllustration = useGenerateImageVariant(authV2LoginIllustrationL
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => { }">
+          <VForm @submit.prevent="login">
             <VRow>
               <!-- email -->
               <VCol cols="12">
@@ -68,30 +97,38 @@ const authV2LoginIllustration = useGenerateImageVariant(authV2LoginIllustrationL
                   :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible" />
 
+                <VAlert class="my-2" type="error" closable v-if="error_exists">
+                  No se puede iniciar sesión, intente cambiar las credenciales
+                </VAlert>
+
+                <VAlert class="my-2" type="success" closable v-if="success_exists">
+                  Las credenciales son correctas, puede ingresar
+                </VAlert>
+
                 <!-- remember me checkbox -->
-                <div class="d-flex align-center justify-space-between flex-wrap my-6 gap-x-2">
+                <!-- <div class="d-flex align-center justify-space-between flex-wrap my-6 gap-x-2">
                   <VCheckbox v-model="form.remember" label="Remember me" />
 
                   <a class="text-primary" href="#">
                     Forgot Password?
                   </a>
-                </div>
+                </div> -->
 
                 <!-- login button -->
-                <VBtn block type="submit">
+                <VBtn class="my-2" block type="submit">
                   Login
                 </VBtn>
               </VCol>
 
               <!-- create account -->
-              <VCol cols="12" class="text-body-1 text-center">
+              <!-- <VCol cols="12" class="text-body-1 text-center">
                 <span class="d-inline-block">
                   New on our platform?
                 </span>
                 <a class="text-primary ms-1 d-inline-block text-body-1" href="#">
                   Create an account
                 </a>
-              </VCol>
+              </VCol> -->
 
               <VCol cols="12" class="d-flex align-center">
                 <VDivider />
