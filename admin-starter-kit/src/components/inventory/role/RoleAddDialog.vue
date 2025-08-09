@@ -61,7 +61,11 @@ const store = async() => {
       }
     })
     console.log(resp);
-    success.value = "El rol se ha registrado correctamente";
+    if(resp.message == 403){
+      error_exits.value = resp.message_text;
+    }else{
+      success.value = "El rol se ha registrado correctamente";
+    }
   } catch (error) {
     console.log(error);
   }

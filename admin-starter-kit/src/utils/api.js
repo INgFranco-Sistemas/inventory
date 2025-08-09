@@ -39,7 +39,7 @@ export const $api = ofetch.create({
     if(isTokenExpired(accessToken) && response.request != "auth/login"){
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      // alert("EL TOKEN A EXPIRADO, INGRESE NUEVAMENTE");
+      alert("EL TOKEN A EXPIRADO, INGRESE NUEVAMENTE");
       setTimeout(() => {
         window.location.reload();
       }, 50);

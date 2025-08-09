@@ -2,14 +2,43 @@ import { Placeholder } from '@tiptap/extension-placeholder';
 <script setup>
 const data = ref([]);
 const isRoleAddDialogVisible = ref(false);
+const list_roles = ref([]);
+const searchQuery = ref(null);
 
 const headers = [
   { title: 'ID', key: 'id' },
   { title: 'Role', key: 'name' },
   { title: 'Fecha de registro', key: 'created_at' },
-  { title: 'Permisos', key: 'list_permissions' },
+  { title: 'Permisos', key: 'permissions_pluck' },
   { title: 'Action', key: 'action' },
 ]
+
+const list = async() => {
+  try {
+    const resp = await $api("role?search="+(searchQuery.value ? searchQuery.value : ''),{
+      method:'GET',
+      onResponseError({response}){
+        console.log(response._data.error);
+      }
+    })
+    console.log(resp);
+    list_roles.value = resp.roles;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const editItem = (item) => {
+
+}
+
+const deleteItem = (item) => {
+
+}
+
+onMounted(() => {
+  list();
+})
 </script>
 
 <template>
@@ -22,6 +51,8 @@ const headers = [
               Placeholder="Search Role"
               density="compact"
               class="me-3"
+              v-model="searchQuery"
+              @keyup.enter="list"
             />
           </VCol>
 
@@ -39,12 +70,37 @@ const headers = [
 
       <VDataTable
         :headers="headers"
-        :items="data"
+        :items="list_roles"
         :items-per-page="5"
         class="text-no-wrap"
       >
         <template #item.id="{ item }">
           <span class="text-h6">{{ item.id }}</span>
+        </template>
+
+        <template #item.permissions_pluck="{item}">
+          <ul>
+            <li v-for="(permission, index) in item.permissions_pluck" :key="index">
+              {{ permission }}
+            </li>
+          </ul>
+        </template>
+
+        <template #item.action="{ item }">
+          <div class="d-flex gap-1">
+            <IconBtn
+              size="small"
+              @click="editItem(item)"
+            >
+              <VIcon icon="ri-pencil-line" />
+            </IconBtn>
+            <IconBtn
+              size="small"
+              @click="deleteItem(item)"
+            >
+              <VIcon icon="ri-delete-bin-line" />
+            </IconBtn>
+          </div>
         </template>
       </VDataTable>
     </VCard>

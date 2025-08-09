@@ -22,7 +22,13 @@ class RoleController extends Controller
                     "id" => $role->id,
                     "name" => $role->name,
                     "created_at" => $role->created_at->format("Y/m/d h:i:s"),
-                    //"permissions"
+                    "permissions" => $role->permissions->map(function ($permission) {
+                        return [
+                            "id" => $permission->id,
+                            "name" => $permission->name,
+                        ];
+                    }),
+                    "permissions_pluck" => $role->permissions->pluck("name"),
                 ];
             })
         ]);
