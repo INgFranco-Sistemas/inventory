@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Controllers\Roles;
+
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
+
+class RoleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $search = $request->get("search");
+        $roles = Role::where("name", "ilike", "%" . $search . "%")->orderBy("id", "desc")->get();
+
+        return response()->json([
+            "roles" => $roles->map(function ($role) {
+                return [
+                    "id" => $role->id,
+                    "name" => $role->name,
+                    "created_at" => $role->created_at->format("Y/m/d h:i:s"),
+                    //"permissions"
+                ];
+            })
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $exist_role = Role::where("name", $request->name)->first();
+
+        if ($exist_role) {
+            return response()->json([
+                "message" => 403,
+                "message_text" => "EL NOMBRE DEL ROL YA EXISTE, INTENTE UNO NUEVO"
+            ]);
+        }
+
+        $role = Role::create([
+            "name" => $request->name,
+            "guard_name" => "api"
+        ]);
+
+        //enlazar con los permisos que tenga
+
+        return response()->json([
+            "message" => 200,
+            "role" => $role,
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        $exist_role = Role::where("name", $request->name)->where("id", "<>", $id)->first();
+
+        if ($exist_role) {
+            return response()->json([
+                "message" => 403,
+                "message_text" => "EL NOMBRE DEL ROL YA EXISTE, INTENTE UNO NUEVO"
+            ]);
+        }
+
+        $role = Role::findOrFail($id);
+
+        $role->update([
+            "name" => $request->name
+        ]);
+
+        //enlazar con los permisos que tenga
+
+        return response()->json([
+            "message" => 200,
+            "role" => $role,
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $role = Role::findOrFail($id);
+        $role->delete();
+        return response()->json([
+            "message" => 200,
+        ]);
+    }
+}
