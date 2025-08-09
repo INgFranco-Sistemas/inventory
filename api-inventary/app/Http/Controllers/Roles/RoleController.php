@@ -47,7 +47,13 @@ class RoleController extends Controller
             "guard_name" => "api"
         ]);
 
+        $permissions = $request->permissions;
+
         //enlazar con los permisos que tenga
+
+        foreach ($permissions as $key => $permission) {
+            $role->givePermissionTo($permission);
+        }
 
         return response()->json([
             "message" => 200,
@@ -83,7 +89,11 @@ class RoleController extends Controller
             "name" => $request->name
         ]);
 
+        $permissions = $request->permissions;
+
         //enlazar con los permisos que tenga
+
+        $role->syncPermissions($permissions);
 
         return response()->json([
             "message" => 200,

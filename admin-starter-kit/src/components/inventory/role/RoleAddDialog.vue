@@ -15,6 +15,9 @@ const emit = defineEmits([
 const name = ref(null);
 console.log(PERMISOS);
 const permissions = ref([]);
+const warning = ref(null);
+const error_exits = ref(null);
+const success = ref(null);
 
 const AddEditPermissionDialog = (permission) => {
   let INDEX = permissions.value.findIndex((perm) => perm == permission);
@@ -24,6 +27,44 @@ const AddEditPermissionDialog = (permission) => {
     permissions.value.push(permission);
   }
   console.log(permissions);
+}
+
+const store = async() => {
+  warning.value = null;
+  error_exits.value = null;
+  success.value = null;
+  if(!name.value){
+    setTimeout(() =>{
+      warning.value = "Se debe llenar el nombre del rol";
+    }, 50);
+    return;
+  }
+
+  if(permissions.value.length == 0){
+    setTimeout(() =>{
+      warning.value = "Se debe seleccionar al menos un permiso";
+    }, 50);
+    return;
+  }
+
+  let data = {
+    name: name.value,
+    permissions: permissions.value,
+  }
+
+  try {
+    const resp = await $api("role", {
+      method: 'POST',
+      body: data,
+      onResponseError({response}){
+        error_exits.value = response._data.error;
+      }
+    })
+    console.log(resp);
+    success.value = "El rol se ha registrado correctamente";
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const onFormSubmit = () => {
@@ -64,7 +105,7 @@ const dialogVisibleUpdate = val => {
         <!-- 👉 Form -->
         <VForm
           class="mt-4"
-          @submit.prevent="onFormSubmit"
+          @submit.prevent="store"
         >
           <VRow>
             <!-- 👉 First Name -->
@@ -76,6 +117,45 @@ const dialogVisibleUpdate = val => {
                 label="Nombre"
                 placeholder="Example: Admin"
               />
+            </VCol>
+
+            <VCol
+              cols="12"
+              v-if="warning"
+            >
+              <VAlert
+                closable
+                close-label="Close Alert"
+                color="warning"
+              >
+                {{ warning }}
+              </VAlert>
+            </VCol>
+
+            <VCol
+              cols="12"
+              v-if="error_exits"
+            >
+              <VAlert
+                closable
+                close-label="Close Alert"
+                color="error"
+              >
+                {{ error_exits }}
+              </VAlert>
+            </VCol>
+
+            <VCol
+              cols="12"
+              v-if="success"
+            >
+              <VAlert
+                closable
+                close-label="Close Alert"
+                color="success"
+              >
+                {{ success }}
+              </VAlert>
             </VCol>
 
             <VCol
