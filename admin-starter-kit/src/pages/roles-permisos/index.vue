@@ -1,6 +1,8 @@
 import { Placeholder } from '@tiptap/extension-placeholder';
 <script setup>
 const data = ref([]);
+const isRoleAddDialogVisible = ref(false);
+
 const headers = [
   { title: 'ID', key: 'id' },
   { title: 'Role', key: 'name' },
@@ -24,7 +26,7 @@ const headers = [
           </VCol>
 
           <VCol cols="2" class="text-end">
-            <VBtn>
+            <VBtn @click="isRoleAddDialogVisible = !isRoleAddDialogVisible">
               Add Role
               <VIcon 
                 end
@@ -46,5 +48,6 @@ const headers = [
         </template>
       </VDataTable>
     </VCard>
+    <RoleAddDialog v-model:isDialogVisible="isRoleAddDialogVisible"></RoleAddDialog>
   </div>
 </template>
