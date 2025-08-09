@@ -1,4 +1,6 @@
 <script setup>
+import { PERMISOS } from '@/utils/constants';
+
 const props = defineProps({
   isDialogVisible: {
     type: Boolean,
@@ -11,6 +13,18 @@ const emit = defineEmits([
 ])
 
 const name = ref(null);
+console.log(PERMISOS);
+const permissions = ref([]);
+
+const AddEditPermissionDialog = (permission) => {
+  let INDEX = permissions.value.findIndex((perm) => perm == permission);
+  if(INDEX != -1) {
+    permissions.value.splice(INDEX,1);
+  }else{
+    permissions.value.push(permission);
+  }
+  console.log(permissions);
+}
 
 const onFormSubmit = () => {
   emit('update:isDialogVisible', false)
@@ -62,6 +76,45 @@ const dialogVisibleUpdate = val => {
                 label="Nombre"
                 placeholder="Example: Admin"
               />
+            </VCol>
+
+            <VCol
+              cols="12"
+            >
+              <VTable>
+                <thead>
+                  <tr>
+                    <th class="text-uppercase">
+                      Modulo
+                    </th>
+                    <th class="text-uppercase">
+                      Permisos
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr
+                    v-for="(item,index) in PERMISOS"
+                    :key="index"
+                  >
+                    <td>
+                      {{ item.name }}
+                    </td>
+                    <td>
+                      <ul>
+                        <li v-for="(permiso, index2) in item.permisos" :key="index2" style="list-style: none;">
+                          <VCheckbox
+                            :label="permiso.name"
+                            :value="permiso.permiso"
+                            @click="AddEditPermissionDialog(permiso.permiso)"
+                          />
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </VTable>
             </VCol>
 
             <!-- 👉 Submit and Cancel -->
