@@ -10,7 +10,6 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:isDialogVisible',
-  'addRole'
 ])
 
 const name = ref(null);
@@ -66,13 +65,6 @@ const store = async() => {
       error_exits.value = resp.message_text;
     }else{
       success.value = "El rol se ha registrado correctamente";
-      emit("addRole", resp.role);
-      name.value = '';
-      permissions.value = [];
-      warning.value = null;
-      error_exits.value = null;
-      success.value = null;
-      onFormReset();
     }
   } catch (error) {
     console.log(error);
