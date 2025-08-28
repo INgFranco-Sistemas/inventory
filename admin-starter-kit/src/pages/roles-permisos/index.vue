@@ -28,6 +28,16 @@ const list = async() => {
   }
 }
 
+const addNewRole = (NewRole) => {
+  console.log(NewRole);
+  let backup = list_roles.value;
+  list_roles.value = [];
+  backup.unshift(NewRole);
+  setTimeout(() => {
+    list_roles.value = backup;
+  }, 50);
+}
+
 const editItem = (item) => {
 
 }
@@ -104,6 +114,6 @@ onMounted(() => {
         </template>
       </VDataTable>
     </VCard>
-    <RoleAddDialog v-model:isDialogVisible="isRoleAddDialogVisible"></RoleAddDialog>
+    <RoleAddDialog v-model:isDialogVisible="isRoleAddDialogVisible" @addRole="addNewRole"></RoleAddDialog>
   </div>
 </template>

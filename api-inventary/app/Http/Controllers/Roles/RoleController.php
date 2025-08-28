@@ -63,7 +63,18 @@ class RoleController extends Controller
 
         return response()->json([
             "message" => 200,
-            "role" => $role,
+            "role" => [
+                "id" => $role->id,
+                "name" => $role->name,
+                "created_at" => $role->created_at->format("Y/m/d h:i:s"),
+                "permissions" => $role->permissions->map(function ($permission) {
+                    return [
+                        "id" => $permission->id,
+                        "name" => $permission->name,
+                    ];
+                }),
+                "permissions_pluck" => $role->permissions->pluck("name"),
+            ],
         ]);
     }
 
@@ -103,7 +114,18 @@ class RoleController extends Controller
 
         return response()->json([
             "message" => 200,
-            "role" => $role,
+            "role" => [
+                "id" => $role->id,
+                "name" => $role->name,
+                "created_at" => $role->created_at->format("Y/m/d h:i:s"),
+                "permissions" => $role->permissions->map(function ($permission) {
+                    return [
+                        "id" => $permission->id,
+                        "name" => $permission->name,
+                    ];
+                }),
+                "permissions_pluck" => $role->permissions->pluck("name"),
+            ],
         ]);
     }
 
