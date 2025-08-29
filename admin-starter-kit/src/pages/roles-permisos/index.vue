@@ -1,9 +1,13 @@
 import { Placeholder } from '@tiptap/extension-placeholder';
 <script setup>
 const data = ref([]);
+
 const isRoleAddDialogVisible = ref(false);
+const isRoleEditDialogVisible = ref(false);
+
 const list_roles = ref([]);
 const searchQuery = ref(null);
+const role_selected_edit = ref(null);
 
 const headers = [
   { title: 'ID', key: 'id' },
@@ -35,11 +39,27 @@ const addNewRole = (NewRole) => {
   backup.unshift(NewRole);
   setTimeout(() => {
     list_roles.value = backup;
+    role_selected_edit.value = item;
+  }, 50);
+}
+
+const addEditRole = (editRole) => {
+  console.log(editRole);
+  let backup = list_roles.value;
+  list_roles.value = [];
+  let INDEX = backup.findIndex((rol) => rol.id == editRole.id);
+  if(INDEX != -1) {
+    backup[INDEX] = editRole;
+  }
+  setTimeout(() => {
+    list_roles.value = backup;
+    role_selected_edit.value = item;
   }, 50);
 }
 
 const editItem = (item) => {
-
+  isRoleEditDialogVisible.value = true;
+  role_selected_edit.value = item;
 }
 
 const deleteItem = (item) => {
@@ -115,5 +135,6 @@ onMounted(() => {
       </VDataTable>
     </VCard>
     <RoleAddDialog v-model:isDialogVisible="isRoleAddDialogVisible" @addRole="addNewRole"></RoleAddDialog>
+    <RoleEditDialog v-if="role_selected_edit && isRoleEditDialogVisible" v-model:isDialogVisible="isRoleEditDialogVisible" :roleSelected="role_selected_edit" @editRole="addEditRole"></RoleEditDialog>
   </div>
 </template>

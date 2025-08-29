@@ -46,6 +46,7 @@ declare module 'vue' {
     PricingPlanDialog: typeof import('./src/components/dialogs/PricingPlanDialog.vue')['default']
     ReferAndEarnDialog: typeof import('./src/components/dialogs/ReferAndEarnDialog.vue')['default']
     RoleAddDialog: typeof import('./src/components/inventory/role/RoleAddDialog.vue')['default']
+    RoleEditDialog: typeof import('./src/components/inventory/role/RoleEditDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollToTop: typeof import('./src/@core/components/ScrollToTop.vue')['default']
