@@ -20,4 +20,5 @@ Route::group([
     "middleware" => ["auth:api"]
 ], function ($router) {
     Route::resource("role", RoleController::class);
+    Route::resource("users", UserController::class);
 });
