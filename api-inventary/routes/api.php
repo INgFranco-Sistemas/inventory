@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Roles\RoleController;
+use App\Http\Controllers\User\UserController;
 
 Route::group([
     // 'middleware' => 'api',

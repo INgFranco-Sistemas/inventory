@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Config\Sucursale;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -13,14 +15,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Rqequest $request)
+    public function index(Request $request)
     {
         $search = $request->get("search");
-
-        $users = User::where("name","ilike","%".$search."%")->orderby("id","desc")->get();
+        $users = User::where("name", "ilike", "%" . $search . "%")->orderBy("id", "desc")->get();
 
         return response()->json([
-            "users" => $users->map(function($user) {
+            "users" => $users->map(function ($user) {
                 return [
                     "id" => $user->id,
                     "name" => $user->name,
@@ -28,14 +29,11 @@ class UserController extends Controller
                     "full_name" => $user->name . ' ' . $user->surname,
                     "email" => $user->email,
                     "role_id" => $user->role_id,
-                    "role" => [
-                        "name" => $user->role->name,
-                    ],
-                    "phone" => $user->Phone,
+                    "role" => $user->role->name,                    
+                    "phone" => $user->phone,
+                    "state" => $user->state,
                     "sucursale_id" => $user->sucursale_id,
-                    "sucursale" => [
-                        "name" => $user->sucursale->name,
-                    ],
+                    "sucursale" => $user->sucursale->name,
                     "avatar" => $user->avatar ? env("APP_URL")."storage/".$user->avatar : NULL,
                     "type_document" => $user->type_document,
                     "n_document" => $user->n_document,
@@ -55,7 +53,7 @@ class UserController extends Controller
         if($is_user_exist){
             return response()->json([
                 "message" => 403,
-                "messge_text" => "EL USUSARIO YA EXISTE"
+                "messge_text" => "EL USUARIO YA EXISTE"
             ]);
         }
 
@@ -81,6 +79,7 @@ class UserController extends Controller
                 "full_name" => $user->name . ' ' . $user->surname,
                 "email" => $user->email,
                 "role_id" => $user->role_id,
+                "state" => $user->state,
                 "role" => [
                     "name" => $user->role->name,
                 ],
@@ -155,6 +154,7 @@ class UserController extends Controller
                     "name" => $user->role->name,
                 ],
                 "phone" => $user->Phone,
+                "state" => $user->state,
                 "sucursale_id" => $user->sucursale_id,
                 "sucursale" => [
                     "name" => $user->sucursale->name,

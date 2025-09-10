@@ -12,7 +12,7 @@ export default [
   },
   {
     title: 'Usuarios',
-    to: { name: 'second-page' },
+    to: { name: 'users' },
     icon: { icon: 'ri-group-line' },
   },
   {
