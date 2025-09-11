@@ -106,14 +106,30 @@ const store = async() => {
     return;
   }
 
-  let data = {
-    name: name.value,
+  let formData = new FormData();
+  formData.append("name", name.value);
+  formData.append("surname", surname.value);
+  formData.append("email", email.value);
+  formData.append("role_id", role_id.value);
+  formData.append("sucursale_id", sucursale_id.value);
+  formData.append("gender", gender.value);
+  formData.append("password", password.value);
+  formData.append("phone", phone.value);
+  formData.append("imagen", FILE_AVATAR.value);
+  formData.append("state", 1);
+
+  if(type_document.value){
+    formData.append("type_document", type_document.value);
+  }
+  
+  if(n_document.value){
+    formData.append("n_document", n_document.value);
   }
 
   try {
     const resp = await $api("users", {
       method: 'POST',
-      body: data,
+      body: formData,
       onResponseError({response}){
         error_exits.value = response._data.error;
       }

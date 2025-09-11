@@ -58,14 +58,13 @@ const config = async() => {
   }
 }
 
-const addNewRole = (NewRole) => {
-  console.log(NewRole);
+const addNewUser = (NewUser) => {
+  console.log(NewUser);
   let backup = list_users.value;
   list_users.value = [];
-  backup.unshift(NewRole);
+  backup.unshift(NewUser);
   setTimeout(() => {
     list_users.value = backup;
-    role_selected_edit.value = item;
   }, 50);
 }
 
@@ -175,7 +174,7 @@ onMounted(() => {
         </template>
       </VDataTable>
     </VCard>
-    <UserAddDialog v-model:isDialogVisible="isUserAddDialogVisible" :sucursales="sucursales" :roles="roles" @addRole="addNewRole"></UserAddDialog>
+    <UserAddDialog v-model:isDialogVisible="isUserAddDialogVisible" :sucursales="sucursales" :roles="roles" @addUser="addNewUser"></UserAddDialog>
     <RoleEditDialog v-if="role_selected_edit && isRoleEditDialogVisible" v-model:isDialogVisible="isRoleEditDialogVisible" :roleSelected="role_selected_edit" @editRole="addEditRole"></RoleEditDialog>
     <RoleDeleteDialog v-if="role_selected_delete && isRoleDeleteDialogVisible" v-model:isDialogVisible="isRoleDeleteDialogVisible" :roleSelected="role_selected_delete" @deleteRole="addDeleteRole"></RoleDeleteDialog>
   </div>

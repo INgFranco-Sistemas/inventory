@@ -38,7 +38,7 @@ class UserController extends Controller
                     "type_document" => $user->type_document,
                     "n_document" => $user->n_document,
                     "gender" => $user->gender,
-                    "created_at" => $user->created_at->format("Y-m-d A h:i"),
+                    "created_at" => $user->created_at->format("Y-m-d h:i A"),
                 ];
             }),
         ]);
@@ -112,7 +112,7 @@ class UserController extends Controller
                 "type_document" => $user->type_document,
                 "n_document" => $user->n_document,
                 "gender" => $user->gender,
-                "created_at" => $user->created_at->format("Y-m-d A h:i"),
+                "created_at" => $user->created_at->format("Y-m-d h:i A"),
             ],
         ]);
     }
@@ -183,7 +183,7 @@ class UserController extends Controller
                 "type_document" => $user->type_document,
                 "n_document" => $user->n_document,
                 "gender" => $user->gender,
-                "created_at" => $user->created_at->format("Y-m-d A h:i"),
+                "created_at" => $user->created_at->format("Y-m-d h:i A"),
             ],
         ]);
     }
