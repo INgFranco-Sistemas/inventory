@@ -1,11 +1,19 @@
 <script setup>
 import { PERMISOS } from '@/utils/constants';
-import { VRadioGroup, VSelect } from 'vuetify/components';
+import { VImg, VRadioGroup, VSelect } from 'vuetify/components';
 
 const props = defineProps({
   isDialogVisible: {
     type: Boolean,
     required: true,
+  },
+  sucursales:{
+    type:Object,
+    required:true,
+  },
+  roles:{
+    type:Object,
+    required:true,
   },
 })
 
@@ -24,6 +32,8 @@ const role_id = ref(null);
 const sucursale_id = ref(null);
 const gender = ref(null);
 const password = ref(null);
+const FILE_AVATAR = ref(null);
+const IMAGEN_PREVIZUALIZA = ref(null);
 
 const warning = ref(null);
 const error_exits = ref(null);
@@ -35,21 +45,69 @@ const store = async() => {
   success.value = null;
   if(!name.value){
     setTimeout(() =>{
-      warning.value = "Se debe llenar el nombre del rol";
+      warning.value = "Se debe llenar el nombre del usuario";
     }, 50);
     return;
   }
 
-  if(permissions.value.length == 0){
+  if(!surname.value){
     setTimeout(() =>{
-      warning.value = "Se debe seleccionar al menos un permiso";
+      warning.value = "Se debe llenar el apellido del usuario";
+    }, 50);
+    return;
+  }
+
+  if(!email.value){
+    setTimeout(() =>{
+      warning.value = "Se debe llenar el correo del usuario";
+    }, 50);
+    return;
+  }
+
+  if(!role_id.value){
+    setTimeout(() =>{
+      warning.value = "Se debe llenar el rol del usuario";
+    }, 50);
+    return;
+  }
+
+  if(!sucursale_id.value){
+    setTimeout(() =>{
+      warning.value = "Se debe llenar la sucursal del usuario";
+    }, 50);
+    return;
+  }
+
+  if(!phone.value){
+    setTimeout(() =>{
+      warning.value = "Se debe llenar el telefono del usuario";
+    }, 50);
+    return;
+  }
+
+  if(!gender.value){
+    setTimeout(() =>{
+      warning.value = "Se debe seleccionar un genero para el usuario";
+    }, 50);
+    return;
+  }
+
+  if(!FILE_AVATAR.value){
+    setTimeout(() =>{
+      warning.value = "Se debe seleccionar una imagen para el usuario";
+    }, 50);
+    return;
+  }
+
+  if(!password.value){
+    setTimeout(() =>{
+      warning.value = "Se debe llenar una contraseña para el usuario";
     }, 50);
     return;
   }
 
   let data = {
     name: name.value,
-    permissions: permissions.value,
   }
 
   try {
@@ -75,6 +133,18 @@ const store = async() => {
   } catch (error) {
     console.log(error);
   }
+}
+
+const loadFile = ($event) =>{
+    if($event.target.files[0].type.indexOf("image") < 0){
+      error_exits.value = "SOLAMENTE PUEDEN SER ARCHIVOS DE TIPO IMAGEN";
+      return;
+    }
+    error_exits.value = '';
+    FILE_AVATAR.value = $event.target.files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(FILE_AVATAR.value);
+    reader.onloadend = () => IMAGEN_PREVIZUALIZA.value = reader.result;
 }
 
 const onFormSubmit = () => {
@@ -193,7 +263,9 @@ const dialogVisibleUpdate = val => {
               cols="6"
             >
               <VSelect 
-                :items="[]"
+                :items="props.roles"
+                item-title="name"
+                item-value="id"
                 v-model="role_id"
                 label="Rol"
                 placeholder="Select Item"
@@ -205,7 +277,9 @@ const dialogVisibleUpdate = val => {
               cols="6"
             >
               <VSelect 
-                :items="[]"
+                :items="props.sucursales"
+                item-title="name"
+                item-value="id"
                 v-model="sucursale_id"
                 label="Sucursal"
                 placeholder="Select Item"
@@ -231,7 +305,14 @@ const dialogVisibleUpdate = val => {
             <VCol
               cols="6"
             >
-              <VFileInput label="Avatar" />
+              <VFileInput label="Avatar" @change="loadFile($event)" />
+
+              <VImg
+                v-if="IMAGEN_PREVIZUALIZA"
+                width="250"
+                height="176"  
+                :src="IMAGEN_PREVIZUALIZA"
+              />
             </VCol>
 
             <VCol

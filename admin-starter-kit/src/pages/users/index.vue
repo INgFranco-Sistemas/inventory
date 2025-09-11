@@ -21,6 +21,8 @@ const isRoleEditDialogVisible = ref(false);
 const isRoleDeleteDialogVisible =ref(false);
 
 const list_users = ref([]);
+const sucursales = ref([]);
+const roles = ref([]);
 const searchQuery = ref(null);
 const role_selected_edit = ref(null);
 const role_selected_delete = ref(null);
@@ -35,6 +37,22 @@ const list = async() => {
     })
     console.log(resp);
     list_users.value = resp.users;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const config = async() => {
+  try {
+    const resp = await $api("users/config",{
+      method:'GET',
+      onResponseError({response}){
+        console.log(response._data.error);
+      }
+    })
+    console.log(resp);
+    sucursales.value = resp.sucursales;
+    roles.value = resp.roles;
   } catch (error) {
     console.log(error);
   }
@@ -90,6 +108,7 @@ const deleteItem = (item) => {
 
 onMounted(() => {
   list();
+  config();
 })
 </script>
 
@@ -156,8 +175,8 @@ onMounted(() => {
         </template>
       </VDataTable>
     </VCard>
-    <UserAddDialog v-model:isDialogVisible="isUserAddDialogVisible" @addRole="addNewRole"></UserAddDialog>
-    <!-- <RoleEditDialog v-if="role_selected_edit && isRoleEditDialogVisible" v-model:isDialogVisible="isRoleEditDialogVisible" :roleSelected="role_selected_edit" @editRole="addEditRole"></RoleEditDialog>
-    <RoleDeleteDialog v-if="role_selected_delete && isRoleDeleteDialogVisible" v-model:isDialogVisible="isRoleDeleteDialogVisible" :roleSelected="role_selected_delete" @deleteRole="addDeleteRole"></RoleDeleteDialog> -->
+    <UserAddDialog v-model:isDialogVisible="isUserAddDialogVisible" :sucursales="sucursales" :roles="roles" @addRole="addNewRole"></UserAddDialog>
+    <RoleEditDialog v-if="role_selected_edit && isRoleEditDialogVisible" v-model:isDialogVisible="isRoleEditDialogVisible" :roleSelected="role_selected_edit" @editRole="addEditRole"></RoleEditDialog>
+    <RoleDeleteDialog v-if="role_selected_delete && isRoleDeleteDialogVisible" v-model:isDialogVisible="isRoleDeleteDialogVisible" :roleSelected="role_selected_delete" @deleteRole="addDeleteRole"></RoleDeleteDialog>
   </div>
 </template>

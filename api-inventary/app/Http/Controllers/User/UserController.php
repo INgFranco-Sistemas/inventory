@@ -44,6 +44,26 @@ class UserController extends Controller
         ]);
     }
 
+    public function config(){
+        $sucursales = Sucursale::all();
+        $roles = Role::all();
+
+        return response()->json([
+            "sucursales" => $sucursales->map(function($sucursal){
+                return [
+                    "id" => $sucursal->id,
+                    "name" => $sucursal->name,
+                ];
+            }),
+            "roles" => $roles->map(function($rol){
+                return [
+                    "id" => $rol->id,
+                    "name" => $rol->name,
+                ];
+            }),
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      */
