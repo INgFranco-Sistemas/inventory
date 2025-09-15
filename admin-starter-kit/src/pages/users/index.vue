@@ -1,5 +1,7 @@
 import { Placeholder } from '@tiptap/extension-placeholder';
 <script setup>
+import UserEditDialog from '@/components/inventory/users/UserEditDialog.vue';
+
 const headers = [
     { title: 'ID', key: 'id' },
     { title: 'Nombre Completo', key: 'full_name' },
@@ -13,15 +15,15 @@ const headers = [
 ]
 
 const isUserAddDialogVisible = ref(false);
-const isRoleEditDialogVisible = ref(false);
-const isRoleDeleteDialogVisible =ref(false);
+const isUserEditDialogVisible = ref(false);
+const isUserDeleteDialogVisible =ref(false);
 
 const list_users = ref([]);
 const sucursales = ref([]);
 const roles = ref([]);
 const searchQuery = ref(null);
-const role_selected_edit = ref(null);
-const role_selected_delete = ref(null);
+const user_selected_edit = ref(null);
+const user_selected_delete = ref(null);
 
 const list = async() => {
   try {
@@ -64,25 +66,25 @@ const addNewUser = (NewUser) => {
   }, 50);
 }
 
-const addEditRole = (editRole) => {
-  console.log(editRole);
+const addEditUser = (editUser) => {
+  console.log(editUser);
   let backup = list_users.value;
   list_users.value = [];
-  let INDEX = backup.findIndex((rol) => rol.id == editRole.id);
+  let INDEX = backup.findIndex((user) => user.id == editUser.id);
   if(INDEX != -1) {
-    backup[INDEX] = editRole;
+    backup[INDEX] = editUser;
   }
   setTimeout(() => {
     list_users.value = backup;
-    role_selected_edit.value = item;
+    user_selected_edit.value = item;
   }, 50);
 }
 
-const addDeleteRole = (Role) => {
-  console.log(Role);
+const addDeleteUser = (User) => {
+  console.log(User);
   let backup = list_users.value;
   list_users.value = [];
-  let INDEX = backup.findIndex((rol) => rol.id == Role.id);
+  let INDEX = backup.findIndex((user) => user.id == User.id);
   if(INDEX != -1) {
     backup.splice(INDEX,1);
   }
@@ -92,13 +94,13 @@ const addDeleteRole = (Role) => {
 }
 
 const editItem = (item) => {
-  isRoleEditDialogVisible.value = true;
-  role_selected_edit.value = item;
+  isUserEditDialogVisible.value = true;
+  user_selected_edit.value = item;
 }
 
 const deleteItem = (item) => {
-  isRoleDeleteDialogVisible.value = true;
-  role_selected_delete.value = item;
+  isUserDeleteDialogVisible.value = true;
+  user_selected_delete.value = item;
 }
 
 const avatarText = value => {
@@ -212,7 +214,7 @@ onMounted(() => {
       </VDataTable>
     </VCard>
     <UserAddDialog v-model:isDialogVisible="isUserAddDialogVisible" :sucursales="sucursales" :roles="roles" @addUser="addNewUser"></UserAddDialog>
-    <RoleEditDialog v-if="role_selected_edit && isRoleEditDialogVisible" v-model:isDialogVisible="isRoleEditDialogVisible" :roleSelected="role_selected_edit" @editRole="addEditRole"></RoleEditDialog>
-    <RoleDeleteDialog v-if="role_selected_delete && isRoleDeleteDialogVisible" v-model:isDialogVisible="isRoleDeleteDialogVisible" :roleSelected="role_selected_delete" @deleteRole="addDeleteRole"></RoleDeleteDialog>
+    <UserEditDialog v-if="user_selected_edit && isUserEditDialogVisible" :sucursales="sucursales" :roles="roles" v-model:isDialogVisible="isUserEditDialogVisible" :selectedUser="user_selected_edit" @editUser="addEditUser"></UserEditDialog>
+    <UserDeleteDialog v-if="user_selected_delete && isUserDeleteDialogVisible" v-model:isDialogVisible="isUserDeleteDialogVisible" :userSelected="user_selected_delete" @deleteUser="addDeleteUser"></UserDeleteDialog>
   </div>
 </template>

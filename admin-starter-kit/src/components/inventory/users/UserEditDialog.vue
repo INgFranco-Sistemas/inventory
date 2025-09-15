@@ -1,4 +1,6 @@
 <script setup>
+import { onMounted, ref } from 'vue';
+
 const props = defineProps({
   isDialogVisible: {
     type: Boolean,
@@ -12,11 +14,15 @@ const props = defineProps({
     type:Object,
     required:true,
   },
+  selectedUser:{
+    type:Object,
+    required:true,
+  }
 })
 
 const emit = defineEmits([
   'update:isDialogVisible',
-  'addUser'
+  'editUser'
 ])
 
 const name = ref(null);
@@ -31,12 +37,13 @@ const gender = ref(null);
 const password = ref(null);
 const FILE_AVATAR = ref(null);
 const IMAGEN_PREVIZUALIZA = ref(null);
+const state = ref(1);
 
 const warning = ref(null);
 const error_exits = ref(null);
 const success = ref(null);
 
-const store = async() => {
+const update = async() => {
   warning.value = null;
   error_exits.value = null;
   success.value = null;
@@ -89,19 +96,19 @@ const store = async() => {
     return;
   }
 
-  if(!FILE_AVATAR.value){
-    setTimeout(() =>{
-      warning.value = "Se debe seleccionar una imagen para el usuario";
-    }, 50);
-    return;
-  }
+//   if(!FILE_AVATAR.value){
+//     setTimeout(() =>{
+//       warning.value = "Se debe seleccionar una imagen para el usuario";
+//     }, 50);
+//     return;
+//   }
 
-  if(!password.value){
-    setTimeout(() =>{
-      warning.value = "Se debe llenar una contraseña para el usuario";
-    }, 50);
-    return;
-  }
+//   if(!password.value){
+//     setTimeout(() =>{
+//       warning.value = "Se debe llenar una contraseña para el usuario";
+//     }, 50);
+//     return;
+//   }
 
   let formData = new FormData();
   formData.append("name", name.value);
@@ -110,10 +117,14 @@ const store = async() => {
   formData.append("role_id", role_id.value);
   formData.append("sucursale_id", sucursale_id.value);
   formData.append("gender", gender.value);
-  formData.append("password", password.value);
+  if(password.value){
+      formData.append("password", password.value);
+  }
   formData.append("phone", phone.value);
-  formData.append("imagen", FILE_AVATAR.value);
-  formData.append("state", 1);
+  if(FILE_AVATAR.value){
+      formData.append("imagen", FILE_AVATAR.value);
+  }
+  formData.append("state", state.value);
 
   if(type_document.value){
     formData.append("type_document", type_document.value);
@@ -124,7 +135,7 @@ const store = async() => {
   }
 
   try {
-    const resp = await $api("users", {
+    const resp = await $api("users/"+props.selectedUser.id, {
       method: 'POST',
       body: formData,
       onResponseError({response}){
@@ -135,23 +146,12 @@ const store = async() => {
     if(resp.message == 403){
       error_exits.value = resp.message_text;
     }else{
-      success.value = "El usuario se ha registrado correctamente";
-      emit("addUser", resp.user);
-      name.value = '';
-      surname.value = '';
-      email.value = '';
-      role_id.value = '';
-      sucursale_id.value = '';
-      phone.value = '';
-      FILE_AVATAR.value = null;
-      IMAGEN_PREVIZUALIZA.value = null;
-      gender.value = null;
-      type_document.value = 'DNI';
-      n_document.value = '';
+      success.value = "El usuario se ha editado correctamente";
+      emit("editUser", resp.user);
       warning.value = null;
       error_exits.value = null;
-      success.value = null;
-      onFormReset();
+      //success.value = null;
+      //onFormReset();
     }
   } catch (error) {
     console.log(error);
@@ -182,6 +182,19 @@ const onFormReset = () => {
 const dialogVisibleUpdate = val => {
   emit('update:isDialogVisible', val)
 }
+
+onMounted(() => {
+    name.value = props.selectedUser.name;
+    surname.value = props.selectedUser.surname;
+    email.value = props.selectedUser.email;
+    phone.value = props.selectedUser.phone;
+    role_id.value = props.selectedUser.role_id;
+    sucursale_id.value = props.selectedUser.sucursale_id;
+    gender.value = props.selectedUser.gender;
+    type_document.value = props.selectedUser.type_document;
+    n_document.value = props.selectedUser.n_document;
+    IMAGEN_PREVIZUALIZA.value = props.selectedUser.avatar;
+})
 </script>
 
 <template>
@@ -201,14 +214,14 @@ const dialogVisibleUpdate = val => {
       <VCardText class="pt-5">
         <div class="text-center pb-6">
           <h4 class="text-h4 mb-2">
-            Registrar Usuario
+            Editar Usuario: {{ props.selectedUser.full_name }}
           </h4>
         </div>
 
         <!-- 👉 Form -->
         <VForm
           class="mt-4"
-          @submit.prevent="store"
+          @submit.prevent="update"
         >
           <VRow>
             <!-- 👉 First Name -->
@@ -328,6 +341,29 @@ const dialogVisibleUpdate = val => {
             <VCol
               cols="6"
             >
+              <VSelect 
+                :items="[
+                    {
+                        name: 'Activo',
+                        id: 1,
+                    },
+                    {
+                        name: 'Inactivo',
+                        id: 2,
+                    }
+                ]"
+                item-title="name"
+                item-value="id"
+                v-model="state"
+                label="Esatdo"
+                placeholder="Select Item"
+                eager
+              />
+            </VCol>
+
+            <VCol
+              cols="6"
+            >
               <VFileInput label="Avatar" @change="loadFile($event)" />
 
               <VImg
@@ -400,7 +436,7 @@ const dialogVisibleUpdate = val => {
               class="d-flex flex-wrap justify-center gap-4"
             >
               <VBtn type="submit">
-                Guardar
+                Editar
               </VBtn>
 
               <VBtn

@@ -28,13 +28,13 @@ class UserController extends Controller
                     "surname" => $user->surname,
                     "full_name" => $user->name . ' ' . $user->surname,
                     "email" => $user->email,
-                    "role_id" => $user->role_id,
+                    "role_id" => (int) $user->role_id,
                     "role" => [
                         "name" => $user->role->name,
                     ],                   
                     "phone" => $user->phone,
                     "state" => $user->state,
-                    "sucursale_id" => $user->sucursale_id,
+                    "sucursale_id" => (int) $user->sucursale_id,
                     "sucursale" => [
                         "name" => $user->sucursale->name,
                     ],
@@ -102,13 +102,13 @@ class UserController extends Controller
                 "surname" => $user->surname,
                 "full_name" => $user->name . ' ' . $user->surname,
                 "email" => $user->email,
-                "role_id" => $user->role_id,
+                "role_id" => (int) $user->role_id,
                 "state" => $user->state,
                 "role" => [
                     "name" => $user->role->name,
                 ],
                 "phone" => $user->Phone,
-                "sucursale_id" => $user->sucursale_id,
+                "sucursale_id" => (int) $user->sucursale_id,
                 "sucursale" => [
                     "name" => $user->sucursale->name,
                 ],
@@ -173,13 +173,13 @@ class UserController extends Controller
                 "surname" => $user->surname,
                 "full_name" => $user->name . ' ' . $user->surname,
                 "email" => $user->email,
-                "role_id" => $user->role_id,
+                "role_id" => (int) $user->role_id,
                 "role" => [
                     "name" => $user->role->name,
                 ],
                 "phone" => $user->Phone,
                 "state" => $user->state,
-                "sucursale_id" => $user->sucursale_id,
+                "sucursale_id" => (int) $user->sucursale_id,
                 "sucursale" => [
                     "name" => $user->sucursale->name,
                 ],
