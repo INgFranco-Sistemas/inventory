@@ -1,7 +1,4 @@
 <script setup>
-import { PERMISOS } from '@/utils/constants';
-import { VImg, VRadioGroup, VSelect } from 'vuetify/components';
-
 const props = defineProps({
   isDialogVisible: {
     type: Boolean,

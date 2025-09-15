@@ -1,9 +1,5 @@
 import { Placeholder } from '@tiptap/extension-placeholder';
 <script setup>
-import RoleDeleteDialog from '@/components/inventory/role/RoleDeleteDialog.vue';
-
-const data = ref([]);
-
 const headers = [
     { title: 'ID', key: 'id' },
     { title: 'Nombre Completo', key: 'full_name' },
@@ -105,6 +101,14 @@ const deleteItem = (item) => {
   role_selected_delete.value = item;
 }
 
+const avatarText = value => {
+  if (!value)
+    return ''
+  const nameArray = value.split(' ')
+  
+  return nameArray.map(word => word.charAt(0).toUpperCase()).join('')
+}
+
 onMounted(() => {
   list();
   config();
@@ -147,13 +151,46 @@ onMounted(() => {
         <template #item.id="{ item }">
           <span class="text-h6">{{ item.id }}</span>
         </template>
+        <template #item.full_name="{ item }">
+          <div class="d-flex align-center">
+            <VAvatar
+            size="32"
+            :color="item.avatar ? '' : 'primary'"
+            :class="item.avatar ? '' : 'v-avatar-light-bg primary--text'"
+            :variant="!item.avatar ? 'tonal' : undefined"
+            >
+            <VImg
+              v-if="item.avatar"
+              :src="item.avatar"
+            />
+            
+            <span
+              v-else
+              class="text-sm"
+            >{{ avatarText(item.full_name) }}</span>
+            </VAvatar>
+            <div class="d-flex flex-column ms-3">
+              <span class="d-block font-weight-medium text-high-emphasis text-truncate">{{ item.full_name }}</span>
+              <!-- <small>{{ item.post }}</small> -->
+            </div>
+          </div>
+        </template>
 
-        <template #item.permissions_pluck="{item}">
-          <ul>
-            <li v-for="(permission, index) in item.permissions_pluck" :key="index">
-              {{ permission }}
-            </li>
-          </ul>
+        <template #item.role="{item}">
+          <span class="text-h6">{{ item.role.name }}</span>
+        </template>
+        
+        <template #item.sucursale="{item}">
+          <span class="text-h6">{{ item.sucursale.name }}</span>
+        </template>
+
+        <template #item.state="{item}">
+          <VChip color="primary" v-if="item.state == 1">
+            Activo
+          </VChip>
+          <VChip color="error" v-if="item.state == 2">
+            Inactivo
+          </VChip>
         </template>
 
         <template #item.action="{ item }">

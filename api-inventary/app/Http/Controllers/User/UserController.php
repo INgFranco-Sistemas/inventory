@@ -18,7 +18,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $search = $request->get("search");
-        $users = User::where("name", "ilike", "%" . $search . "%")->orderBy("id", "desc")->get();
+        $users = User::where(DB::raw("users.name || ' ' || COALESCE(users.surname,'') || ' ' || users.email || ' ' || COALESCE(users.phone,'')"), "ilike", "%" . $search . "%")->orderBy("id", "desc")->get();
 
         return response()->json([
             "users" => $users->map(function ($user) {
@@ -29,11 +29,15 @@ class UserController extends Controller
                     "full_name" => $user->name . ' ' . $user->surname,
                     "email" => $user->email,
                     "role_id" => $user->role_id,
-                    "role" => $user->role->name,                    
+                    "role" => [
+                        "name" => $user->role->name,
+                    ],                   
                     "phone" => $user->phone,
                     "state" => $user->state,
                     "sucursale_id" => $user->sucursale_id,
-                    "sucursale" => $user->sucursale->name,
+                    "sucursale" => [
+                        "name" => $user->sucursale->name,
+                    ],
                     "avatar" => $user->avatar ? env("APP_URL")."storage/".$user->avatar : NULL,
                     "type_document" => $user->type_document,
                     "n_document" => $user->n_document,
