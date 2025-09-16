@@ -1,6 +1,7 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import avatar1 from '@images/avatars/avatar-1.png'
+import { useWindowScroll } from '@vueuse/core';
 
 const userProfileList = [
   { type: 'divider' },
@@ -48,7 +49,8 @@ const logout = async () => {
   localStorage.removeItem("user");
   localStorage.removeItem("token");
 
-  await router.push("/login");
+  // await router.push("/login");
+  window.location.reload();
 }
 </script>
 
