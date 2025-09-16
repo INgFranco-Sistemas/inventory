@@ -115,6 +115,8 @@ onMounted(() => {
   list();
   config();
 })
+
+definePage({meta: {permission: 'list_user',}});
 </script>
 
 <template>

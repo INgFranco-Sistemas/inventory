@@ -27,6 +27,18 @@ export const setupGuards = router => {
       else
         return undefined
     }
+
+    let USER = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+    if(USER && USER.role.name != 'Super-Admin'){
+      //LISTA DE PERMISOS DEL USUARIO AUTENTICADO
+      let permissions = USER.permissions;
+      if(permissions.includes(to.meta.permission) || to.meta.permission == 'all'){
+        return true;
+      }else{
+        return {name: 'not-authorized'}
+      }
+    }
+
     if (!isLoggedIn && to.matched.length) {
       /* eslint-disable indent */
             return isLoggedIn

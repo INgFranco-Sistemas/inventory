@@ -87,6 +87,8 @@ const deleteItem = (item) => {
 onMounted(() => {
   list();
 })
+
+definePage({meta: {permission: 'list_role',}});
 </script>
 
 <template>
