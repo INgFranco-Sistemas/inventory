@@ -24,13 +24,13 @@ export default [
     children: [
       {
         title: 'Sucursales',
-        to: 'second-page',
+        to: 'configuration-sucursales',
         permission: 'settings',
         icon: { icon: 'ri-radio-button-line' },
       },
       {
         title: 'Almacenes',
-        to: 'second-page',
+        to: 'configuration-warehouses',
         permission: 'settings',
         icon: { icon: 'ri-radio-button-line' },
       },

@@ -53,6 +53,9 @@ declare module 'vue' {
     ScrollToTop: typeof import('./src/@core/components/ScrollToTop.vue')['default']
     ShareProjectDialog: typeof import('./src/components/dialogs/ShareProjectDialog.vue')['default']
     Shortcuts: typeof import('./src/@core/components/Shortcuts.vue')['default']
+    SucursalAddDialog: typeof import('./src/components/inventory/configuration/sucursales/SucursalAddDialog.vue')['default']
+    SucursalDeleteDialog: typeof import('./src/components/inventory/configuration/sucursales/SucursalDeleteDialog.vue')['default']
+    SucursalEditDialog: typeof import('./src/components/inventory/configuration/sucursales/SucursalEditDialog.vue')['default']
     TheCustomizer: typeof import('./src/@core/components/TheCustomizer.vue')['default']
     ThemeSwitcher: typeof import('./src/@core/components/ThemeSwitcher.vue')['default']
     TiptapEditor: typeof import('./src/@core/components/TiptapEditor.vue')['default']
@@ -62,5 +65,8 @@ declare module 'vue' {
     UserEditDialog: typeof import('./src/components/inventory/users/UserEditDialog.vue')['default']
     UserInfoEditDialog: typeof import('./src/components/dialogs/UserInfoEditDialog.vue')['default']
     UserUpgradePlanDialog: typeof import('./src/components/dialogs/UserUpgradePlanDialog.vue')['default']
+    WarehouseAddDialog: typeof import('./src/components/inventory/configuration/warehouse/WarehouseAddDialog.vue')['default']
+    WarehouseDeleteDialog: typeof import('./src/components/inventory/configuration/warehouse/WarehouseDeleteDialog.vue')['default']
+    WarehouseEditDialog: typeof import('./src/components/inventory/configuration/warehouse/WarehouseEditDialog.vue')['default']
   }
 }
