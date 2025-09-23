@@ -6,6 +6,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Roles\RoleController;
 use App\Http\Controllers\Config\SucursalController;
 use App\Http\Controllers\Config\WarehouseController;
+use App\Http\Controllers\Config\ProductCategorieController;
 
 Route::group([
     // 'middleware' => 'api',
@@ -29,4 +30,7 @@ Route::group([
     
     Route::resource("sucursales", SucursalController::class);
     Route::resource("warehouses", WarehouseController::class);
+
+    Route::post("categories/{id}", [ProductCategorieController::class, "update"]);
+    Route::resource("categories", ProductCategorieController::class);
 });

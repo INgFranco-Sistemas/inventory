@@ -36,7 +36,7 @@ export default [
       },
       {
         title: 'Categorias',
-        to: 'second-page',
+        to: 'configuration-categories',
         permission: 'settings',
         icon: { icon: 'ri-radio-button-line' },
       },
