@@ -8,6 +8,7 @@ use App\Http\Controllers\Config\SucursalController;
 use App\Http\Controllers\Config\WarehouseController;
 use App\Http\Controllers\Config\ProductCategorieController;
 use App\Http\Controllers\Config\ProviderController;
+use App\Http\Controllers\Config\UnitController;
 
 Route::group([
     // 'middleware' => 'api',
@@ -37,4 +38,6 @@ Route::group([
 
     Route::post("providers/{id}", [ProviderController::class, "update"]);
     Route::resource("providers", ProviderController::class);
+
+    Route::resource("units", UnitController::class);
 });
