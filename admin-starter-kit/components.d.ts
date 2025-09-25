@@ -67,6 +67,8 @@ declare module 'vue' {
     TiptapEditor: typeof import('./src/@core/components/TiptapEditor.vue')['default']
     TwoFactorAuthDialog: typeof import('./src/components/dialogs/TwoFactorAuthDialog.vue')['default']
     UnitAddDialog: typeof import('./src/components/inventory/configuration/units/UnitAddDialog.vue')['default']
+    UnitConversionAddDialog: typeof import('./src/components/inventory/configuration/unit_conversions/UnitConversionAddDialog.vue')['default']
+    UnitConversionDeleteDialog: typeof import('./src/components/inventory/configuration/unit_conversions/UnitConversionDeleteDialog.vue')['default']
     UnitDeleteDialog: typeof import('./src/components/inventory/configuration/units/UnitDeleteDialog.vue')['default']
     UnitEditDialog: typeof import('./src/components/inventory/configuration/units/UnitEditDialog.vue')['default']
     UserAddDialog: typeof import('./src/components/inventory/users/UserAddDialog.vue')['default']

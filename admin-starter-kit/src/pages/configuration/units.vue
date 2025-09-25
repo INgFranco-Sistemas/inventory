@@ -13,11 +13,13 @@ const headers = [
 const isUnitAddDialogVisible = ref(false);
 const isUnitEditDialogVisible = ref(false);
 const isUnitDeleteDialogVisible = ref(false);
+const isUnitConversionAddDialogVisible = ref(false);
 
 const list_units = ref([]);
 const searchQuery = ref(null);
 const unit_selected_edit = ref(null);
 const unit_selected_delete = ref(null);
+const unit_selected_conversion = ref(null);
 
 const list = async () => {
     try {
@@ -81,6 +83,11 @@ const deleteItem = (item) => {
     unit_selected_delete.value = item;
 }
 
+const addConversion = (item) => {
+    isUnitConversionAddDialogVisible.value = true;
+    unit_selected_conversion.value = item;
+}
+
 onMounted(() => {
     list();
 })
@@ -123,6 +130,9 @@ definePage({ meta: { permission: 'settings', } });
 
                 <template #item.action="{ item }">
                     <div class="d-flex gap-1">
+                        <IconBtn size="small" @click="addConversion(item)">
+                            <VIcon icon="ri-git-repository-commits-line" />
+                        </IconBtn>
                         <IconBtn size="small" @click="editItem(item)">
                             <VIcon icon="ri-pencil-line" />
                         </IconBtn>
@@ -135,10 +145,11 @@ definePage({ meta: { permission: 'settings', } });
         </VCard>
         <UnitAddDialog v-model:isDialogVisible="isUnitAddDialogVisible" @addUnit="addNewUnit"></UnitAddDialog>
         <UnitEditDialog v-if="unit_selected_edit && isUnitEditDialogVisible"
-            v-model:isDialogVisible="isUnitEditDialogVisible" :unitSelected="unit_selected_edit"
-            @editUnit="addEditUnit"></UnitEditDialog>
+        v-model:isDialogVisible="isUnitEditDialogVisible" :unitSelected="unit_selected_edit"
+        @editUnit="addEditUnit"></UnitEditDialog>
         <UnitDeleteDialog v-if="unit_selected_delete && isUnitDeleteDialogVisible"
-            v-model:isDialogVisible="isUnitDeleteDialogVisible" :unitSelected="unit_selected_delete"
-            @deleteUnit="addDeleteUnit"></UnitDeleteDialog>
+        v-model:isDialogVisible="isUnitDeleteDialogVisible" :unitSelected="unit_selected_delete"
+        @deleteUnit="addDeleteUnit"></UnitDeleteDialog>
+        <UnitConversionAddDialog v-if="unit_selected_conversion && isUnitConversionAddDialogVisible" v-model:isDialogVisible="isUnitConversionAddDialogVisible" :units="list_units" :unitSelected="unit_selected_conversion"></UnitConversionAddDialog>
     </div>
 </template>

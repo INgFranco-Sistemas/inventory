@@ -9,6 +9,7 @@ use App\Http\Controllers\Config\WarehouseController;
 use App\Http\Controllers\Config\ProductCategorieController;
 use App\Http\Controllers\Config\ProviderController;
 use App\Http\Controllers\Config\UnitController;
+use App\Http\Controllers\Config\UnitConversionController;
 
 Route::group([
     // 'middleware' => 'api',
@@ -40,4 +41,6 @@ Route::group([
     Route::resource("providers", ProviderController::class);
 
     Route::resource("units", UnitController::class);
+
+    Route::resource("unit-conversions", UnitConversionController::class);
 });
