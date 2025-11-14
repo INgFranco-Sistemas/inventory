@@ -10,6 +10,7 @@ use App\Http\Controllers\Config\ProductCategorieController;
 use App\Http\Controllers\Config\ProviderController;
 use App\Http\Controllers\Config\UnitController;
 use App\Http\Controllers\Config\UnitConversionController;
+use App\Http\Controllers\Product\ProductController;
 
 Route::group([
     // 'middleware' => 'api',
@@ -43,4 +44,8 @@ Route::group([
     Route::resource("units", UnitController::class);
 
     Route::resource("unit-conversions", UnitConversionController::class);
+
+    Route::get("products/config", [ProductController::class, "config"]);
+    Route::post("products/{id}", [ProductController::class, "update"]);
+    Route::resource("products", ProductController::class);
 });
