@@ -1,5 +1,5 @@
 <script setup>
-import { VCheckbox, VCol } from 'vuetify/components';
+import { VAlert, VCheckbox, VCol } from 'vuetify/components';
 
 import {
   useDropZone,
@@ -7,7 +7,7 @@ import {
   useObjectUrl,
 } from '@vueuse/core'
 import { $api } from '@/utils/api';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const dropZoneRef = ref()
 const fileData = ref([])
@@ -16,7 +16,6 @@ function onDrop(DroppedFiles) {
   DroppedFiles?.forEach(file => {
     if (file.type.slice(0, 6) !== 'image/') {
       alert('Only image files are allowed')
-      
       return
     }
     fileData.value.push({
@@ -71,6 +70,9 @@ const unit_price_id = ref(null);
 const type_client_price = ref(null);
 const price = ref(0);
 
+const product_warehouses = ref([]);
+const warning_stock = ref(null);
+
 const config = async() => {
   try {
     const resp = await $api("products/config",{
@@ -87,6 +89,56 @@ const config = async() => {
   } catch (error) {
     console.log(error);
   }
+}
+
+const addStock = () => {
+  warning_stock.value = null;
+  if(!warehouse_stock_id.value){
+    setTimeout(() => {
+      warning_stock.value = "Seleccione un almacén";
+    }, 25);
+    return;
+  }
+
+  if(!unit_stock_id.value){
+    setTimeout(() => {
+      warning_stock.value = "Seleccione una unidad";
+    }, 25);
+    return;
+  }
+
+  if(stock.value <= 0){
+    setTimeout(() => {
+      warning_stock.value = "Ingrese un stock válido";
+    }, 25);
+    return;
+  }
+
+  let IS_DUPLICITY = product_warehouses.value.find((pw) => pw.warehouse_id == warehouse_stock_id.value && pw.unit_id == unit_stock_id.value);
+  if(IS_DUPLICITY){
+    warning_stock.value = "Esta existencia ya existe, agregar una nueva";
+    return;
+  }
+
+  let WAREHOUSE_SELECTED = warehouses.value.find((warehouse) => warehouse.id == warehouse_stock_id.value);
+  let UNIT_SELECTED = units.value.find((unit) => unit.id == unit_stock_id.value);
+  product_warehouses.value.unshift({
+    warehouse_id: warehouse_stock_id.value,
+    warehouse: WAREHOUSE_SELECTED,
+    unit_id: unit_stock_id.value,
+    unit: UNIT_SELECTED,
+    stock: stock.value,
+  });
+
+  setTimeout(() => {
+    warehouse_stock_id.value = '';
+    unit_stock_id.value = '';
+    stock.value = 0;
+  }, 25);
+}
+
+const deleteStock = (index) => {
+  product_warehouses.value.splice(index, 1);
 }
 
 onMounted(() => {
@@ -317,8 +369,22 @@ definePage({meta: {permission: 'register_product', }});
               >
                 <VBtn
                   prepend-icon="ri-add-line"
+                  @click="addStock()"
                 >
                 </VBtn>            
+              </VCol>
+
+              <VCol
+                cols="12"
+                v-if="warning_stock"
+              >
+                <VAlert
+                  closable
+                  close-label="Close Alert"
+                  color="warning"
+                >
+                  {{ warning_stock }}
+                </VAlert>
               </VCol>
             </VRow>              
           </VCardText>
@@ -343,7 +409,27 @@ definePage({meta: {permission: 'register_product', }});
               </thead>
   
               <tbody>
-                
+                <tr v-for="(product_warehouses, index) in product_warehouses" :key="index">
+                  <td>
+                    {{ product_warehouses.warehouse.name }}
+                  </td>
+                  <td>
+                    {{ product_warehouses.unit.name }}
+                  </td>
+                  <td>
+                    {{ product_warehouses.stock }}
+                  </td>
+                  <td>
+                    <div class="d-flex gap-1">
+                        <!-- <IconBtn size="small" @click="editItem(item)">
+                            <VIcon icon="ri-pencil-line" />
+                        </IconBtn> -->
+                        <IconBtn size="small" @click="deleteStock(index)">
+                            <VIcon icon="ri-delete-bin-line" />
+                        </IconBtn>
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </VTable>
           </VCardText>
